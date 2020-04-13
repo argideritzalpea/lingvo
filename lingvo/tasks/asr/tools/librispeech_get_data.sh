@@ -16,7 +16,7 @@
 
 set -eu
 
-./librispeech.01.download_train.sh
-./librispeech.02.download_devtest.sh
-./librispeech.03.parameterize_train.sh
-./librispeech.04.parameterize_devtest.sh
+#./librispeech.01.download_train.sh
+#./librispeech.02.download_devtest.sh
+./lingvo/tasks/asr/tools/librispeech.03.parameterize_train.sh
+./lingvo/tasks/asr/tools/librispeech.04.parameterize_devtest.sh

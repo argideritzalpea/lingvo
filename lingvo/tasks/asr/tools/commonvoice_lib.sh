@@ -14,19 +14,12 @@
 # limitations under the License.
 # ==============================================================================
 
-set -eu
+LANG=kab
+ROOT=/tmp/commonvoice
 
-. lingvo/tasks/asr/tools/librispeech_lib.sh
+# From:
+# http://www.openslr.org/12/
+SOURCE=https://voice-prod-bundler-ee1969a6ce8178826482b88e843c335139bd3fb4.s3.amazonaws.com/cv-corpus-4-2019-12-10
 
-mkdir -p "${ROOT}/devtest"
-
-for subset in {dev,test}-{clean,other}; do
-  set -x
-  python3 -m lingvo.tools.create_asr_features \
-    --logtostderr \
-    --input_tarball="${ROOT}/raw/${subset}.tar.gz" --generate_tfrecords \
-    --shard_id=0 --num_shards=1 --num_output_shards=1 \
-    --output_range_begin=0 --output_range_end=1 \
-    --output_template="${ROOT}/devtest/${subset}.tfrecords-%5.5d-of-%5.5d"
-  set +x
-done
+# If in China, use this mirror:
+# http://cn-mirror.openslr.org/resources/12

@@ -16,17 +16,11 @@
 
 set -eu
 
-. lingvo/tasks/asr/tools/librispeech_lib.sh
+. commonvoice_lib.sh
 
-mkdir -p "${ROOT}/devtest"
+mkdir -p "${ROOT}/raw"
 
-for subset in {dev,test}-{clean,other}; do
-  set -x
-  python3 -m lingvo.tools.create_asr_features \
-    --logtostderr \
-    --input_tarball="${ROOT}/raw/${subset}.tar.gz" --generate_tfrecords \
-    --shard_id=0 --num_shards=1 --num_output_shards=1 \
-    --output_range_begin=0 --output_range_end=1 \
-    --output_template="${ROOT}/devtest/${subset}.tfrecords-%5.5d-of-%5.5d"
-  set +x
-done
+# This will take about half an hour on a good connection.
+echo "
+${SOURCE}/$LANG.tar.gz" \
+  | aria2c -x16 -s16 --dir="${ROOT}/raw" -i -

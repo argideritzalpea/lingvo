@@ -22,7 +22,5 @@ mkdir -p "${ROOT}/raw"
 
 # This will take about half an hour on a good connection.
 echo "
-${SOURCE}/train-clean-100.tar.gz
-${SOURCE}/train-clean-360.tar.gz
 ${SOURCE}/train-other-500.tar.gz" \
   | aria2c -x16 -s16 --dir="${ROOT}/raw" -i -

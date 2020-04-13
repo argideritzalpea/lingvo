@@ -1851,4 +1851,5 @@ if __name__ == '__main__':
   FLAGS(sys.argv, known_only=True)
   model_imports.ImportParams(FLAGS.model)
   FLAGS.unparse_flags()
+  tf.compat.v1.disable_eager_execution()
   tf.app.run(main)
