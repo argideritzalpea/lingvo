@@ -75,19 +75,12 @@ def _MakeTfExample(uttid, frames, text):
 
 def _ReadTranscriptions():
   """Read all transcription files from the tarball.
-
   Returns:
     A map of utterance id to upper case transcription.
   """
   tar = tarfile.open(FLAGS.input_tarball, mode='r:gz')
   n = 0
   tf.logging.info('First pass: loading text files...')
-  # TODO(drpng): there's more information in the following files:
-  # LibriSpeech/LICENSE.TXT
-  # LibriSpeech/README.TXT
-  # LibriSpeech/CHAPTERS.TXT
-  # LibriSpeech/SPEAKERS.TXT
-  # LibriSpeech/BOOKS.TXT
   trans = {}
   for tarinfo in tar:
     if not tarinfo.isreg():
@@ -97,16 +90,18 @@ def _ReadTranscriptions():
       tf.logging.info('Scanned %d entries...', n)
     if not tarinfo.name.endswith('.trans.txt'):
       continue
-    # The file LibriSpeech/dev-clean/3170/137482/3170-137482.trans.txt
-    # will contain lines such as:
-    # 3170-137482-0000 WITH AN EDUCATION WHICH OUGHT TO ...
-    # 3170-137482-0001 I WAS COMPELLED BY POVERTY ...
     key = tarinfo.name.strip('.trans.txt')
     f = tar.extractfile(tarinfo)
     u = 0
+    #beginning of part changed
     for l in f.readlines():
-      uttid, txt = l.strip(b'\n').split(b' ', 1)
-      trans[uttid] = txt
+      uttid, txt = str(l).strip('\n').split(' ', 1)
+      #add if-else condition because some uttid was in the form "b'_numbers_" and others 'b"numbers' and so one split wasn't enough
+      if len(uttid.split("b'"))>1:
+        trans[uttid.split("b'")[1]] = txt
+      else:
+        trans[uttid] = txt
+      #end of part changed
       u += 1
     tf.logging.info('[%s] = %d utterances', key, u)
     f.close()
@@ -123,9 +118,14 @@ def _DumpTranscripts():
 def _LoadTranscriptionsFromFile():
   trans = {}
   with open(FLAGS.transcripts_filepath, 'r') as f:
-    for line in f.readlines():
-      uttid, txt = line.strip('\n').split(' ', 1)
-      trans[uttid] = txt
+    for l in f.readlines():
+      uttid, txt = str(l).strip('\n').split(' ', 1)
+      #add if-else condition because some uttid was in the form "b'_numbers_" and others 'b"numbers' and so one split wasn't enough
+      if len(uttid.split("b'"))>1:
+        trans[uttid.split("b'")[1]] = txt
+      else:
+        trans[uttid] = txt
+      #end of part changed
   return trans
 
 
@@ -210,4 +210,5 @@ def main(_):
 
 
 if __name__ == '__main__':
+  tf.compat.v1.disable_eager_execution()
   tf.app.run(main)

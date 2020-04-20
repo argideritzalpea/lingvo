@@ -33,4 +33,4 @@ cp -f bazel-genfiles/lingvo/core/hyperparams_pb2.py lingvo/core
 sphinx-apidoc -o "$OUTDIR" -efPM --implicit-namespaces lingvo/ $(find . -name '*_test.py')
 cp docs/apidoc/{conf.py,index.rst} "$OUTDIR"
 (export PYTHONPATH="$(pwd)" && cd "$OUTDIR" && sphinx-build -b html -T -j auto . build)
-rm -f lingvo/core/{inference_graph_pb2.py,hyperparams_pb2.py} lingvo/core/ops/{x_ops.so,hyps_pb2.py,record_pb2.py} lingvo/tasks/car/ops/car_ops.so
+#rm -f lingvo/core/{inference_graph_pb2.py,hyperparams_pb2.py} lingvo/core/ops/{x_ops.so,hyps_pb2.py,record_pb2.py} lingvo/tasks/car/ops/car_ops.so

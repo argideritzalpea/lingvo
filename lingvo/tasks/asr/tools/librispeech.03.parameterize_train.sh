@@ -16,7 +16,7 @@
 
 set -eu
 
-. librispeech_lib.sh
+. lingvo/tasks/asr/tools/librispeech_lib.sh
 
 mkdir -p "${ROOT}/train"
 
@@ -26,12 +26,21 @@ mkdir -p "${ROOT}/train"
 # with the accompanying transcription from the first pass.
 
 # This takes about 10 minutes per set.
+: '
 for subset in train-clean-100 train-clean-360 train-other-500; do
   echo "=== First pass, collecting transcripts: ${subset}"
   python3 -m lingvo.tools.create_asr_features --logtostderr \
     --input_tarball="${ROOT}/raw/${subset}.tar.gz" --dump_transcripts \
     --transcripts_filepath="${ROOT}/train/${subset}.txt"
 done
+'
+
+
+echo "=== First pass, collecting transcripts: train-clean-100"
+python3 -m lingvo.tools.create_asr_features --logtostderr \
+  --input_tarball="${ROOT}/raw/train-clean-100.tar.gz" --dump_transcripts \
+  --transcripts_filepath="${ROOT}/train/train-clean-100.txt"
+
 
 # We are allocating as follows:
 #  num utts num_shards  subset
@@ -45,10 +54,11 @@ done
 
 # Second pass: Create tf.Examples. It takes about 90 minutes.
 
-rm -f FAILED
+#rm -f FAILED
 subset=train-clean-100
 echo "=== Second pass, parameterization: ${subset}"
 for subshard in $(seq 0 9); do
+  echo ${ROOT}/raw/${subset}.tar.gz
   set -x
   nice -n 20 python3 -m lingvo.tools.create_asr_features \
     --logtostderr \
@@ -62,6 +72,7 @@ done
 wait
 ! [ -f FAILED ]
 
+: '
 subset=train-clean-360
 echo "=== Second pass, parameterization: ${subset}"
 for subshard in $(seq 0 9); do
@@ -95,3 +106,4 @@ for subshard in $(seq 0 9); do
 done
 wait
 ! [ -f FAILED ]
+'
