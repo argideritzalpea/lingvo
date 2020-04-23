@@ -100,7 +100,7 @@ def _ReadTranscriptions():
       if len(uttid.split("b'"))>1:
         trans[uttid.split("b'")[1]] = txt
       else:
-        trans[uttid.split('b"')[1]] = txt
+        trans[uttid] = txt
       #end of part changed
       u += 1
     tf.logging.info('[%s] = %d utterances', key, u)
