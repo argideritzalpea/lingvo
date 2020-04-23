@@ -49,8 +49,8 @@ class Librispeech960Base(base_model_params.SingleTaskModelParams):
 
     p.pad_to_max_seq_length = False
     p.file_random_seed = 0
-    p.file_buffer_size = 10000
-    p.file_parallelism = 16
+    p.file_buffer_size = 1
+    p.file_parallelism = 1
 
     if is_eval:
       p.source_max_length = 3600

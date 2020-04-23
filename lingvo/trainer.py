@@ -1243,7 +1243,7 @@ class Decoder(base_runner.BaseRunner):
     while num_examples_metric.total_value < samples_per_summary:
       tf.logging.info('Fetching dec_output.')
       fetch_start = time.time()
-      run_options = tf.RunOptions(report_tensor_allocations_upon_oom=False)
+      run_options = tf.RunOptions(report_tensor_allocations_upon_oom=True)
       if self._summary_op is None:
         # No summaries were collected.
         dec_out = sess.run(self._dec_output, options=run_options)
