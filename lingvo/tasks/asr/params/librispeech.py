@@ -72,7 +72,7 @@ class Librispeech960Base(base_model_params.SingleTaskModelParams):
   def Train(self):
     p = self._CommonInputParams(is_eval=False)
     p.file_datasource.file_pattern = 'train/train.tfrecords-*'
-    p.num_samples = 281241
+    p.num_samples = 28539
     return p
 
   def Dev(self):
