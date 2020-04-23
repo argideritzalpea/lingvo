@@ -14,9 +14,12 @@
 # limitations under the License.
 # ==============================================================================
 
-set -eu
+LANG=kab
+ROOT=/tmp/commonvoice
 
-#./librispeech.01.download_train.sh
-#./librispeech.02.download_devtest.sh
-./lingvo/tasks/asr/tools/librispeech.03.parameterize_train.sh
-./lingvo/tasks/asr/tools/librispeech.04.parameterize_devtest.sh
+# From:
+# http://www.openslr.org/12/
+SOURCE=https://voice-prod-bundler-ee1969a6ce8178826482b88e843c335139bd3fb4.s3.amazonaws.com/cv-corpus-4-2019-12-10
+
+# If in China, use this mirror:
+# http://cn-mirror.openslr.org/resources/12
