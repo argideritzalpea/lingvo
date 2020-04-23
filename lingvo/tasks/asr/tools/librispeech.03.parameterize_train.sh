@@ -18,7 +18,7 @@ set -eu
 
 . lingvo/tasks/asr/tools/librispeech_lib.sh
 
-# mkdir -p "${ROOT}/train"
+mkdir -p "${ROOT}/train"
 
 # To save space, we don't unpack to intermediate files. The first pass collects
 # all transcription files from the tarball. The second pass unpacks the audio,
@@ -26,12 +26,21 @@ set -eu
 # with the accompanying transcription from the first pass.
 
 # This takes about 10 minutes per set.
-#for subset in train-clean-100 train-clean-360 train-other-500; do
-#  echo "=== First pass, collecting transcripts: ${subset}"
-#  python3 -m lingvo.tools.create_asr_features --logtostderr \
-#    --input_tarball="${ROOT}/raw/${subset}.tar.gz" --dump_transcripts \
-#    --transcripts_filepath="${ROOT}/train/${subset}.txt"
-#done
+: '
+for subset in train-clean-100 train-clean-360 train-other-500; do
+  echo "=== First pass, collecting transcripts: ${subset}"
+  python3 -m lingvo.tools.create_asr_features --logtostderr \
+    --input_tarball="${ROOT}/raw/${subset}.tar.gz" --dump_transcripts \
+    --transcripts_filepath="${ROOT}/train/${subset}.txt"
+done
+'
+
+
+echo "=== First pass, collecting transcripts: train-clean-100"
+python3 -m lingvo.tools.create_asr_features --logtostderr \
+  --input_tarball="${ROOT}/raw/train-clean-100.tar.gz" --dump_transcripts \
+  --transcripts_filepath="${ROOT}/train/train-clean-100.txt"
+
 
 # We are allocating as follows:
 #  num utts num_shards  subset
